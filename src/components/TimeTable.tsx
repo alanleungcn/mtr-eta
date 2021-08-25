@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
-import { Train } from '../components/Eta';
+import { Train } from '../views/Eta';
 import { codeToName } from '../utils/codeToName';
 
 export const TimeTable = ({
@@ -8,10 +8,6 @@ export const TimeTable = ({
 }: {
 	trainList: Train[] | undefined;
 }) => {
-	/* const [eta, setEta] = React.useState<string[]>([]);
-	React.useEffect(() => {
-		console.log('timetable trainlist update');
-	}, [trainList]); */
 	return (
 		<Table size="sm">
 			<Thead>

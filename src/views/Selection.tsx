@@ -10,10 +10,11 @@ import {
 import { getLinesOpt } from '../utils/getLinesOpt';
 import Select from 'react-select';
 import { getStationsOpt } from '../utils/getStationsOpt';
-import { Footer } from './Footer';
+import { Footer } from '../components/Footer';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
+import { ColorModeSwitcher } from '../components/ColorModeSwitcher';
+import { motion } from 'framer-motion';
 
 export interface Option {
 	value: string;
@@ -107,7 +108,9 @@ export const Selection = () => {
 		setStationsOpt(getStationsOpt(undefined));
 	};
 	const viewEta = () => {
-		history.push(`/eta/${selectedLine?.value}/${selectedStation?.value}`);
+		history.push(`/eta/${selectedLine?.value}/${selectedStation?.value}`, {
+			prevPath: 'index',
+		});
 	};
 	const theme = useTheme();
 	const selectColor = {
@@ -118,64 +121,71 @@ export const Selection = () => {
 		primary50: theme.colors.blue[900],
 	};
 	return (
-		<VStack spacing="25px" h="100%" justify="center">
-			<Image
-				src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/285/locomotive_1f682.png"
-				alt="logo"
-				boxSize="100px"
-			/>
-
-			<Select
-				options={linesOpt}
-				value={selectedLine}
-				isSearchable={false}
-				placeholder="Select line..."
-				onChange={(e) => onSelectedLineChange(e)}
-				styles={{ ...lineColor, ...customWidth }}
-				theme={
-					colorMode === 'dark'
-						? (theme) => ({
-								...theme,
-								colors: {
-									...theme.colors,
-									...selectColor,
-								},
-						  })
-						: undefined
-				}
-			/>
-			<Select
-				styles={customWidth}
-				options={stationsOpt}
-				value={selectedStation}
-				placeholder="Select station..."
-				onChange={(e) => onSelectedStationChange(e)}
-				theme={
-					colorMode === 'dark'
-						? (theme) => ({
-								...theme,
-								colors: {
-									...theme.colors,
-									...selectColor,
-								},
-						  })
-						: undefined
-				}
-			/>
-			{selectedStation && (
-				<VStack spacing="25px">
-					<HStack spacing="25px">
-						<Button variant="outline" onClick={viewEta}>
-							ETA
-						</Button>
-						<Button variant="outline" onClick={onReset}>
-							Reset
-						</Button>
+		<motion.div
+			initial={{ x: '-100vw', opacity: 0 }}
+			animate={{ x: 0, opacity: 1 }}
+			exit={{ x: '-100vw', opacity: 0 }}
+			transition={{ type: 'tween', duration: 0.2, ease: 'anticipate' }}
+			style={{ width: '100%', height: '100%' }}
+		>
+			<VStack spacing="25px" h="100%" justify="center">
+				<Image src="/favicon.png" boxSize="100px" />
+				<Select
+					options={linesOpt}
+					value={selectedLine}
+					isSearchable={false}
+					placeholder="Select line..."
+					onChange={(e) => onSelectedLineChange(e)}
+					styles={{ ...lineColor, ...customWidth }}
+					theme={
+						colorMode === 'dark'
+							? (theme) => ({
+									...theme,
+									colors: {
+										...theme.colors,
+										...selectColor,
+									},
+							  })
+							: undefined
+					}
+				/>
+				<Select
+					styles={customWidth}
+					options={stationsOpt}
+					value={selectedStation}
+					placeholder="Select station..."
+					onChange={(e) => onSelectedStationChange(e)}
+					theme={
+						colorMode === 'dark'
+							? (theme) => ({
+									...theme,
+									colors: {
+										...theme.colors,
+										...selectColor,
+									},
+							  })
+							: undefined
+					}
+				/>
+				<VStack spacing="25">
+					<HStack spacing="25">
+						<ColorModeSwitcher />
+						{selectedStation && (
+							<HStack spacing="25">
+								<Button variant="outline" onClick={onReset}>
+									Reset
+								</Button>
+								<Button variant="outline" onClick={viewEta}>
+									ETA
+								</Button>
+							</HStack>
+						)}
 					</HStack>
-					<Footer code={selectedStation.value.toLowerCase()} />
+					{selectedStation && (
+						<Footer code={selectedStation.value.toLowerCase()} />
+					)}
 				</VStack>
-			)}
-			<ColorModeSwitcher />
-		</VStack>
+			</VStack>
+		</motion.div>
 	);
 };

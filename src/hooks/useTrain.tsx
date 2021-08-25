@@ -23,7 +23,7 @@ export const useTrain = (
 	const [loading, setLoading] = React.useState<boolean>(true);
 	React.useEffect(() => {
 		const getTrain = async () => {
-			setError(undefined);
+			//setError(undefined);
 			axios
 				.get(
 					`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${line}&sta=${sta}`
@@ -36,6 +36,7 @@ export const useTrain = (
 							isdelay: res.data.isdelay === 'Y' ? true : false,
 							message: res.data.message,
 						});
+					else setError(undefined);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -46,9 +47,9 @@ export const useTrain = (
 				});
 		};
 		getTrain();
-		const interval = setInterval(getTrain, 30000);
+		const interval = setInterval(getTrain, 10000);
 		return () => clearInterval(interval);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
 	return [up, down, error, loading];
 };

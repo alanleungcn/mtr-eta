@@ -5,12 +5,18 @@ import { CookiesProvider } from 'react-cookie';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 import { ColorModeScript } from '@chakra-ui/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ChakraProvider, theme } from '@chakra-ui/react';
 
 ReactDOM.render(
 	<React.StrictMode>
 		<ColorModeScript initialColorMode="light" />
 		<CookiesProvider>
-			<App />
+			<ChakraProvider theme={theme}>
+				<Router>
+					<App />
+				</Router>
+			</ChakraProvider>
 		</CookiesProvider>
 	</React.StrictMode>,
 	document.getElementById('root')
