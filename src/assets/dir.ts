@@ -8,18 +8,18 @@ interface DirMap {
 export const dir: DirMap = {
 	AEL: {
 		up: 'Airport / AsiaWorld-Expo',
-		down: 'Hong Kong',
+		down: 'HOK',
 	},
 	TCL: {
-		up: 'Tung Chung',
-		down: 'Hong Kong',
+		up: 'TUC',
+		down: 'HOK',
 	},
 	TML: {
-		up: 'Tuen Mun',
-		down: 'Wu Kai Sha',
+		up: 'TUM',
+		down: 'WKS',
 	},
 	TKL: {
 		up: 'Po Lam / LOHAS Park',
-		down: 'North Point',
+		down: 'NOP',
 	},
 };

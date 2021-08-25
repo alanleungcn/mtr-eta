@@ -6,15 +6,19 @@ import {
 	useTheme,
 	useColorMode,
 	Image,
+	IconButton,
 } from '@chakra-ui/react';
-import { getLinesOpt } from '../utils/getLinesOpt';
 import Select from 'react-select';
-import { getStationsOpt } from '../utils/getStationsOpt';
 import { Footer } from '../components/Footer';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { FaLanguage } from 'react-icons/fa';
+import i18next from 'i18next';
+import { useStationsOpt } from '../hooks/useStationsOpt';
+import { useLinesOpt } from '../hooks/useLinesOpt';
 
 export interface Option {
 	value: string;
@@ -25,7 +29,6 @@ const customWidth = {
 	container: (base: any) => ({
 		...base,
 		width: '75%',
-		maxWidth: '500px',
 	}),
 };
 
@@ -73,27 +76,37 @@ const lineColor = {
 export const Selection = () => {
 	const { colorMode } = useColorMode();
 	const history = useHistory();
-	const linesOpt = getLinesOpt();
-	const [stationsOpt, setStationsOpt] = React.useState<Option[]>([]);
+	const linesOpt = useLinesOpt();
+	const { t } = useTranslation();
+	//const [stationsOpt, setStationsOpt] = React.useState<Option[]>([]);
 	const [selectedLine, setSelectedLine] = React.useState<Option | null>(null);
 	const [selectedStation, setSelectedStation] = React.useState<Option | null>(
 		null
+	);
+	const stationsOpt = useStationsOpt(
+		selectedLine ? selectedLine.value : undefined
 	);
 	const [cookies, setCookie, removeCookie] = useCookies([
 		'selectedLine',
 		'selectedStation',
 	]);
 	React.useEffect(() => {
-		cookies.selectedLine && setSelectedLine(cookies.selectedLine);
-		cookies.selectedStation && setSelectedStation(cookies.selectedStation);
-		setStationsOpt(getStationsOpt(cookies.selectedLine?.value));
+		cookies.selectedLine &&
+			setSelectedLine({
+				value: cookies.selectedLine.value,
+				label: t(cookies.selectedLine.value),
+			});
+		cookies.selectedStation &&
+			setSelectedStation({
+				value: cookies.selectedStation.value,
+				label: t(cookies.selectedStation.value),
+			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	const onSelectedLineChange = (e: Option | null) => {
 		setSelectedLine(e);
 		setSelectedStation(null);
 		removeCookie('selectedStation');
-		setStationsOpt(getStationsOpt(e?.value));
 		setCookie('selectedLine', e);
 	};
 	const onSelectedStationChange = (e: Option | null) => {
@@ -105,11 +118,10 @@ export const Selection = () => {
 		setSelectedStation(null);
 		removeCookie('selectedLine');
 		removeCookie('selectedStation');
-		setStationsOpt(getStationsOpt(undefined));
 	};
 	const viewEta = () => {
 		history.push(`/eta/${selectedLine?.value}/${selectedStation?.value}`, {
-			prevPath: 'index',
+			prev: '/',
 		});
 	};
 	const theme = useTheme();
@@ -122,19 +134,25 @@ export const Selection = () => {
 	};
 	return (
 		<motion.div
-			initial={{ x: '-100vw', opacity: 0 }}
+			initial={history.location.state ? { x: '-100vw', opacity: 0 } : undefined}
 			animate={{ x: 0, opacity: 1 }}
 			exit={{ x: '-100vw', opacity: 0 }}
-			transition={{ type: 'tween', duration: 0.2, ease: 'anticipate' }}
-			style={{ width: '100%', height: '100%' }}
+			transition={{ type: 'tween', duration: 0.2, ease: 'easeIn' }}
+			style={{
+				width: '100%',
+				height: '100%',
+				maxWidth: 500,
+				marginLeft: 'auto',
+				marginRight: 'auto',
+			}}
 		>
-			<VStack spacing="25px" h="100%" justify="center">
+			<VStack spacing="25" h="100%" justify="center">
 				<Image src="/favicon.png" boxSize="100px" />
 				<Select
 					options={linesOpt}
 					value={selectedLine}
 					isSearchable={false}
-					placeholder="Select line..."
+					placeholder={t('Select line...')}
 					onChange={(e) => onSelectedLineChange(e)}
 					styles={{ ...lineColor, ...customWidth }}
 					theme={
@@ -152,8 +170,9 @@ export const Selection = () => {
 				<Select
 					styles={customWidth}
 					options={stationsOpt}
+					isSearchable={false}
 					value={selectedStation}
-					placeholder="Select station..."
+					placeholder={t('Select station...')}
 					onChange={(e) => onSelectedStationChange(e)}
 					theme={
 						colorMode === 'dark'
@@ -169,14 +188,36 @@ export const Selection = () => {
 				/>
 				<VStack spacing="25">
 					<HStack spacing="25">
+						<IconButton
+							icon={<FaLanguage />}
+							variant="outline"
+							aria-label="change language"
+							onClick={() =>
+								i18next
+									.changeLanguage(i18next.language === 'en' ? 'zh' : 'en')
+									.then(() => {
+										selectedLine &&
+											setSelectedLine({
+												value: selectedLine.value,
+												label: t(selectedLine.value),
+											});
+										selectedStation &&
+											setSelectedStation({
+												value: selectedStation.value,
+												label: t(selectedStation.value),
+											});
+									})
+							}
+						/>
+
 						<ColorModeSwitcher />
 						{selectedStation && (
 							<HStack spacing="25">
 								<Button variant="outline" onClick={onReset}>
-									Reset
+									{t('Reset')}
 								</Button>
 								<Button variant="outline" onClick={viewEta}>
-									ETA
+									{t('ETA')}
 								</Button>
 							</HStack>
 						)}

@@ -23,7 +23,6 @@ export const useTrain = (
 	const [loading, setLoading] = React.useState<boolean>(true);
 	React.useEffect(() => {
 		const getTrain = async () => {
-			//setError(undefined);
 			axios
 				.get(
 					`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${line}&sta=${sta}`
