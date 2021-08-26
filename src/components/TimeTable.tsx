@@ -13,18 +13,26 @@ export const TimeTable = ({
 		<Table size="sm">
 			<Thead>
 				<Tr>
-					<Th pl="5">{t('Destination')}</Th>
+					<Th pl="5" w="25%">
+						{t('Destination')}
+					</Th>
 					<Th textAlign="center">{t('Platform')}</Th>
-					<Th isNumeric>{t('Time')}</Th>
+					<Th isNumeric w="25%">
+						{t('Time')}
+					</Th>
 				</Tr>
 			</Thead>
 			<Tbody>
 				{trainList &&
 					trainList.map((train) => (
 						<Tr key={train.seq}>
-							<Td pl="5">{t(train.dest)}</Td>
+							<Td pl="5" w="25%">
+								{t(train.dest)}
+							</Td>
 							<Td textAlign="center">{train.plat}</Td>
-							<Td isNumeric>{train.time}</Td>
+							<Td isNumeric w="25%">
+								{train.time}
+							</Td>
 						</Tr>
 					))}
 			</Tbody>
