@@ -11,7 +11,6 @@ import {
 import Select from 'react-select';
 import { Footer } from '../components/Footer';
 import { useHistory } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +18,8 @@ import { FaLanguage } from 'react-icons/fa';
 import i18next from 'i18next';
 import { useStationsOpt } from '../hooks/useStationsOpt';
 import { useLinesOpt } from '../hooks/useLinesOpt';
+import { Helmet } from 'react-helmet-async';
+import { useSelected } from '../hooks/useSelected';
 
 export interface Option {
 	value: string;
@@ -74,50 +75,22 @@ const lineColor = {
 };
 
 export const Selection = () => {
-	const { colorMode } = useColorMode();
 	const history = useHistory();
 	const linesOpt = useLinesOpt();
 	const { t } = useTranslation();
-	//const [stationsOpt, setStationsOpt] = React.useState<Option[]>([]);
-	const [selectedLine, setSelectedLine] = React.useState<Option | null>(null);
-	const [selectedStation, setSelectedStation] = React.useState<Option | null>(
-		null
-	);
-	const stationsOpt = useStationsOpt(
-		selectedLine ? selectedLine.value : undefined
-	);
-	const [cookies, setCookie, removeCookie] = useCookies([
-		'selectedLine',
-		'selectedStation',
-	]);
-	React.useEffect(() => {
-		cookies.selectedLine &&
-			setSelectedLine({
-				value: cookies.selectedLine.value,
-				label: t(cookies.selectedLine.value),
-			});
-		cookies.selectedStation &&
-			setSelectedStation({
-				value: cookies.selectedStation.value,
-				label: t(cookies.selectedStation.value),
-			});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	const { colorMode } = useColorMode();
+	const [selectedLine, selectedStation, setLine, setStation] = useSelected();
+	const stationsOpt = useStationsOpt(selectedLine?.value);
 	const onSelectedLineChange = (e: Option | null) => {
-		setSelectedLine(e);
-		setSelectedStation(null);
-		removeCookie('selectedStation');
-		setCookie('selectedLine', e);
+		setLine(e?.value);
+		setStation(null);
 	};
 	const onSelectedStationChange = (e: Option | null) => {
-		setSelectedStation(e);
-		setCookie('selectedStation', e);
+		setStation(e?.value);
 	};
 	const onReset = () => {
-		setSelectedLine(null);
-		setSelectedStation(null);
-		removeCookie('selectedLine');
-		removeCookie('selectedStation');
+		setLine(null);
+		setStation(null);
 	};
 	const viewEta = () => {
 		history.push(`/eta/${selectedLine?.value}/${selectedStation?.value}`, {
@@ -137,7 +110,7 @@ export const Selection = () => {
 			initial={history.location.state ? { x: '-100vw', opacity: 0 } : undefined}
 			animate={{ x: 0, opacity: 1 }}
 			exit={{ x: '-100vw', opacity: 0 }}
-			transition={{ type: 'tween', duration: 0.2, ease: 'easeIn' }}
+			transition={{ type: 'tween', duration: 0.2, ease: 'anticipate' }}
 			style={{
 				width: '100%',
 				height: '100%',
@@ -146,6 +119,17 @@ export const Selection = () => {
 				marginRight: 'auto',
 			}}
 		>
+			<Helmet>
+				<title>MTR ETA</title>
+				<meta
+					name="theme-color"
+					content={
+						colorMode === 'dark'
+							? theme.colors.gray[800]
+							: theme.colors.whiteAlpha[900]
+					}
+				/>
+			</Helmet>
 			<VStack spacing="25" h="100%" justify="center">
 				<Image src="/favicon.png" boxSize="100px" />
 				<Select
@@ -196,16 +180,8 @@ export const Selection = () => {
 								i18next
 									.changeLanguage(i18next.language === 'en' ? 'zh' : 'en')
 									.then(() => {
-										selectedLine &&
-											setSelectedLine({
-												value: selectedLine.value,
-												label: t(selectedLine.value),
-											});
-										selectedStation &&
-											setSelectedStation({
-												value: selectedStation.value,
-												label: t(selectedStation.value),
-											});
+										setLine(selectedLine?.value ?? null);
+										setStation(selectedStation?.value ?? null);
 									})
 							}
 						/>

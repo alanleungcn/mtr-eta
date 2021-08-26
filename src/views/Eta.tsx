@@ -19,6 +19,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { lines } from '../assets/lines';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 
 export interface Train {
 	dest: string;
@@ -96,6 +97,9 @@ export const Eta = () => {
 				marginRight: 'auto',
 			}}
 		>
+			<Helmet>
+				<title>{`${t(line)} / ${t(station)}`}</title>
+			</Helmet>
 			<Flex h="100%" direction="column" justify="center">
 				<HStack position="absolute" top="5" left="2.5" spacing="2.5">
 					<IconButton
