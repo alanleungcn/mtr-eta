@@ -1,15 +1,16 @@
-import { dict } from '../assets/dict';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { i18n } from 'i18next';
+import { stations } from '../assets/stations';
 
 interface Option {
 	value: string;
 	label: string;
 }
 
-const getLocalStorage = (key: string): string | null => {
+const getLocalStorage = (key: string, i18next: i18n): string | null => {
 	const item = localStorage.getItem(key);
-	for (const key in dict) if (item === key) return item;
+	if (item && i18next.exists(item)) return item;
 	localStorage.setItem(key, '');
 	return null;
 };
@@ -21,15 +22,17 @@ export const useSelected = (): [
 	(station: string | null | undefined) => void,
 	boolean
 ] => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [selectedLine, setSelectedLine] = useState<Option | null>(null);
 	const [selectedStation, setSelectedStation] = useState<Option | null>(null);
 	const [loading, setLoading] = useState(true);
 	useEffect(() => {
-		const line = getLocalStorage('selectedLine');
-		const station = getLocalStorage('selectedStation');
+		const line = getLocalStorage('selectedLine', i18n);
+		const station = getLocalStorage('selectedStation', i18n);
 		setLine(line);
-		setStation(station);
+		line && station && stations[line].includes(station)
+			? setStation(station)
+			: setStation(null);
 		setLoading(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

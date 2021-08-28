@@ -13,11 +13,11 @@ import {
 } from '@chakra-ui/react';
 import { useHistory, useParams } from 'react-router-dom';
 import { TimeTable } from '../components/TimeTable';
-import { dir } from '../assets/dir';
+import { lines } from '../assets/lines';
 import { useTrain } from '../hooks/useTrain';
 import { FaArrowLeft } from 'react-icons/fa';
 import { AnimateSharedLayout, motion, MotionConfig } from 'framer-motion';
-import { lines } from '../assets/lines';
+import { stations } from '../assets/stations';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 
@@ -98,13 +98,13 @@ export const Eta = () => {
 						icon={<FaArrowLeft />}
 						onClick={() => history.push('/', { prev: '/eta' })}
 					/>
-					<Tag size="lg" color="white" backgroundColor={dir[line].color}>
+					<Tag size="lg" color="white" backgroundColor={lines[line].color}>
 						{`${t(line)} / ${t(station)}`}
 					</Tag>
 				</HStack>
 				<Stack spacing="10" h="100%" justify="center" mx="2.5">
 					<MotionConfig transition={{ type: 'spring', duration: 0.25 }}>
-						{station !== lines[line][lines[line].length - 1] && (
+						{station !== stations[line][stations[line].length - 1] && (
 							<AnimateSharedLayout>
 								<Stack>
 									<motion.div layout style={{ width: '100%' }}>
@@ -115,7 +115,7 @@ export const Eta = () => {
 											alignSelf="start"
 											colorScheme="green"
 										>
-											{`${t('To')} ${t(dir[line].up)}`}
+											{`${t('To')} ${t(lines[line].up)}`}
 										</Tag>
 									</motion.div>
 									<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -130,7 +130,7 @@ export const Eta = () => {
 								</Stack>
 							</AnimateSharedLayout>
 						)}
-						{station !== lines[line][0] && (
+						{station !== stations[line][0] && (
 							<AnimateSharedLayout>
 								<Stack>
 									<motion.div layout style={{ width: '100%' }}>
@@ -141,7 +141,7 @@ export const Eta = () => {
 											alignSelf="start"
 											colorScheme="red"
 										>
-											{`${t('To')} ${t(dir[line].down)}`}
+											{`${t('To')} ${t(lines[line].down)}`}
 										</Tag>
 									</motion.div>
 									<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

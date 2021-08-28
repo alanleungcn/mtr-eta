@@ -5,8 +5,9 @@ import {
 	HStack,
 	useTheme,
 	useColorMode,
+	Badge,
 } from '@chakra-ui/react';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { Footer } from '../components/Footer';
 import { useHistory } from 'react-router-dom';
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher';
@@ -18,8 +19,8 @@ import { Helmet } from 'react-helmet-async';
 import { useSelected } from '../hooks/useSelected';
 import { LangSwitcher } from '../components/LangSwitcher';
 import { Icon } from '../components/Icon';
-import { dir } from '../assets/dir';
-export interface Option {
+import { lines } from '../assets/lines';
+export interface IOption {
 	value: string;
 	label: string;
 }
@@ -35,6 +36,7 @@ const lineColor = {
 	option: (base: any, state: any) => ({
 		...base,
 		display: 'flex',
+		overflow: 'visible',
 		alignItems: 'center',
 		':before': {
 			width: 25,
@@ -43,12 +45,14 @@ const lineColor = {
 			marginRight: 10,
 			borderRadius: 6.25,
 			display: 'inline-block',
-			backgroundColor: dir[state.data.value].color,
+			boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
+			backgroundColor: lines[state.data.value].color,
 		},
 	}),
 	singleValue: (base: any, state: any) => ({
 		...base,
 		display: 'flex',
+		overflow: 'visible',
 		alignItems: 'center',
 		':before': {
 			width: 25,
@@ -57,9 +61,24 @@ const lineColor = {
 			marginRight: 10,
 			borderRadius: 6.25,
 			display: 'inline-block',
-			backgroundColor: dir[state.data.value].color,
+			boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
+			backgroundColor: lines[state.data.value].color,
 		},
 	}),
+};
+
+const Option = (props: any) => {
+	const { t } = useTranslation();
+	return (
+		<components.Option {...props}>
+			{props.label}
+			{lines[props.value].eta && (
+				<Badge colorScheme="red" variant="solid" ml="auto">
+					{t('ETA')}
+				</Badge>
+			)}
+		</components.Option>
+	);
 };
 
 export const Selection = () => {
@@ -75,11 +94,11 @@ export const Selection = () => {
 		loading,
 	] = useSelected();
 	const stationsOpt = useStationsOpt(selectedLine?.value);
-	const onSelectedLineChange = (e: Option | null) => {
+	const onSelectedLineChange = (e: IOption | null) => {
 		setLine(e?.value);
 		setStation(null);
 	};
-	const onSelectedStationChange = (e: Option | null) => {
+	const onSelectedStationChange = (e: IOption | null) => {
 		setStation(e?.value);
 	};
 	const onReset = () => {
@@ -146,6 +165,7 @@ export const Selection = () => {
 										isSearchable={false}
 										placeholder={t('Select line...')}
 										onChange={(e) => onSelectedLineChange(e)}
+										components={{ Option }}
 										styles={{ ...lineColor, ...customWidth }}
 										theme={
 											colorMode === 'dark'
@@ -199,9 +219,13 @@ export const Selection = () => {
 										</Button>
 									</motion.div>
 								)}
-								{selectedStation && (
+								{selectedLine && selectedStation && (
 									<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-										<Button variant="outline" onClick={viewEta}>
+										<Button
+											variant="outline"
+											onClick={viewEta}
+											disabled={!lines[selectedLine.value].eta}
+										>
 											{t('ETA')}
 										</Button>
 									</motion.div>
