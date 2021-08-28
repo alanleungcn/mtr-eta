@@ -13,7 +13,7 @@ export const App = () => {
 	};
 	return (
 		<Div100vh style={{ overflowX: 'hidden' }}>
-			<AnimatePresence exitBeforeEnter>
+			<AnimatePresence exitBeforeEnter initial={false}>
 				<Switch location={location} key={location.pathname}>
 					<Route path="/eta/:line/:station" component={Eta} />
 					<Route path="/" component={Selection} />

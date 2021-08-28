@@ -18,16 +18,19 @@ export const useSelected = (): [
 	Option | null,
 	Option | null,
 	(line: string | null | undefined) => void,
-	(station: string | null | undefined) => void
+	(station: string | null | undefined) => void,
+	boolean
 ] => {
 	const { t } = useTranslation();
 	const [selectedLine, setSelectedLine] = useState<Option | null>(null);
 	const [selectedStation, setSelectedStation] = useState<Option | null>(null);
+	const [loading, setLoading] = useState(true);
 	useEffect(() => {
 		const line = getLocalStorage('selectedLine');
 		const station = getLocalStorage('selectedStation');
 		setLine(line);
 		setStation(station);
+		setLoading(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	useEffect(() => {
@@ -42,5 +45,5 @@ export const useSelected = (): [
 	const setStation = (station: string | null | undefined): void => {
 		setSelectedStation(station ? { value: station, label: t(station) } : null);
 	};
-	return [selectedLine, selectedStation, setLine, setStation];
+	return [selectedLine, selectedStation, setLine, setStation, loading];
 };

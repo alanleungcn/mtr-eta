@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-	Skeleton,
 	Tag,
 	Alert,
 	AlertIcon,
@@ -8,15 +7,16 @@ import {
 	IconButton,
 	HStack,
 	Flex,
+	Spinner,
 	Stack,
-	Box,
+	Center,
 } from '@chakra-ui/react';
 import { useHistory, useParams } from 'react-router-dom';
 import { TimeTable } from '../components/TimeTable';
 import { dir } from '../assets/dir';
 import { useTrain } from '../hooks/useTrain';
 import { FaArrowLeft } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { AnimateSharedLayout, motion, MotionConfig } from 'framer-motion';
 import { lines } from '../assets/lines';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -28,26 +28,15 @@ export interface Train {
 	time: string;
 }
 
-const wrapSkeleton = (loading: boolean, children: JSX.Element) => {
-	return loading ? (
-		<Stack>
-			<Skeleton h="30px" />
-			<Skeleton h="30px" />
-			<Skeleton h="30px" />
-			<Skeleton h="30px" />
-		</Stack>
-	) : (
-		children
-	);
-};
-
 export const Eta = () => {
 	const { t } = useTranslation();
 	const history = useHistory();
 	const { line, station } = useParams<{ line: string; station: string }>();
 	const [up, down, error, loading] = useTrain(line, station);
-	const [upList, setUpList] = React.useState<Train[]>([]);
-	const [downList, setDownList] = React.useState<Train[]>([]);
+	const [upList, setUpList] = React.useState<Train[] | undefined>(undefined);
+	const [downList, setDownList] = React.useState<Train[] | undefined>(
+		undefined
+	);
 	const getEtaTime = (from: Date): string => {
 		const ms = +from - +new Date();
 		const min = ms / 60000;
@@ -68,109 +57,123 @@ export const Eta = () => {
 		return tmp;
 	};
 	const setEtaText = () => {
+		if (loading) return;
 		up && setUpList(transEtaTime(up));
 		down && setDownList(transEtaTime(down));
 	};
-	React.useEffect(
-		setEtaText, // eslint-disable-next-line react-hooks/exhaustive-deps
-		[loading]
-	);
 	React.useEffect(() => {
-		const timer = setTimeout(setEtaText, 1000);
+		setEtaText();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading]);
+	React.useEffect(() => {
+		const timer = setTimeout(setEtaText, 5000);
 		return () => clearTimeout(timer);
 	});
+	const [animComplete, setAnimComplete] = React.useState(
+		history.location.state ? false : true
+	);
 	return (
 		<motion.div
-			initial={history.location.state ? { x: '100vw', opacity: 0 } : undefined}
+			initial={{ x: '100vw', opacity: 0 }}
 			animate={{ x: 0, opacity: 1 }}
-			exit={{ x: '100vw', opacity: 0 }}
-			transition={{
-				type: 'tween',
-				duration: 0.2,
-				ease: 'anticipate',
-			}}
+			exit={{ opacity: 0 }}
+			transition={{ type: 'spring', duration: 0.25 }}
 			style={{
-				width: '100%',
-				height: '100%',
 				maxWidth: 500,
 				marginLeft: 'auto',
 				marginRight: 'auto',
+				width: '100vw',
+				height: '100%',
 			}}
+			onAnimationComplete={() => setAnimComplete(true)}
 		>
 			<Helmet>
 				<title>{`${t(line)} / ${t(station)}`}</title>
 			</Helmet>
-			<Flex h="100%" direction="column" justify="center">
-				<HStack position="absolute" top="5" left="2.5" spacing="2.5">
+			<Flex h="100%" direction="column">
+				<HStack mt="19" ml="2.5" spacing="2.5">
 					<IconButton
-						alignSelf="start"
 						variant="ghost"
-						aria-label="go back"
+						aria-label="back"
 						icon={<FaArrowLeft />}
 						onClick={() => history.push('/', { prev: '/eta' })}
 					/>
-					<Tag
-						size="lg"
-						color="white"
-						backgroundColor={
-							line === 'AEL'
-								? '#1C7670'
-								: line === 'TCL'
-								? '#FE7F1D'
-								: line === 'TML'
-								? '#9A3B26'
-								: '#6B208B'
-						}
-					>
+					<Tag size="lg" color="white" backgroundColor={dir[line].color}>
 						{`${t(line)} / ${t(station)}`}
 					</Tag>
 				</HStack>
-				{station !== lines[line][lines[line].length - 1] && (
-					<Box ml="2.5" mr="2.5">
-						<Tag
-							size="lg"
-							alignSelf="start"
-							m="5"
-							ml="2.5"
-							mt="10"
-							colorScheme="green"
-						>
-							{`${t('To')} ${t(dir[line].up)}`}
-						</Tag>
-						{wrapSkeleton(loading, <TimeTable trainList={upList} />)}
-					</Box>
-				)}
-				{station !== lines[line][0] && (
-					<Box ml="2.5" mr="2.5">
-						<Tag
-							size="lg"
-							alignSelf="start"
-							m="5"
-							ml="2.5"
-							mt="10"
-							colorScheme="red"
-						>
-							{`${t('To')} ${t(dir[line].down)}`}
-						</Tag>
-						{wrapSkeleton(loading, <TimeTable trainList={downList} />)}
-					</Box>
-				)}
-				{error && (
-					<Alert
-						status="error"
-						variant="left-accent"
-						position="absolute"
-						bottom="0"
-					>
-						<AlertIcon />
-						<AlertTitle>
-							{error.isdelay
-								? t('Train delayed')
-								: t('Oops! Something went wrong')}
-						</AlertTitle>
-					</Alert>
-				)}
+				<Stack spacing="10" h="100%" justify="center" mx="2.5">
+					<MotionConfig transition={{ type: 'spring', duration: 0.25 }}>
+						{station !== lines[line][lines[line].length - 1] && (
+							<AnimateSharedLayout>
+								<Stack>
+									<motion.div layout style={{ width: '100%' }}>
+										<Tag
+											ml="2.5"
+											mb="2.5"
+											size="lg"
+											alignSelf="start"
+											colorScheme="green"
+										>
+											{`${t('To')} ${t(dir[line].up)}`}
+										</Tag>
+									</motion.div>
+									<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+										{upList && animComplete ? (
+											<TimeTable trainList={upList} />
+										) : (
+											<Center h="157">
+												<Spinner />
+											</Center>
+										)}
+									</motion.div>
+								</Stack>
+							</AnimateSharedLayout>
+						)}
+						{station !== lines[line][0] && (
+							<AnimateSharedLayout>
+								<Stack>
+									<motion.div layout style={{ width: '100%' }}>
+										<Tag
+											ml="2.5"
+											mb="2.5"
+											size="lg"
+											alignSelf="start"
+											colorScheme="red"
+										>
+											{`${t('To')} ${t(dir[line].down)}`}
+										</Tag>
+									</motion.div>
+									<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+										{downList && animComplete ? (
+											<TimeTable trainList={downList} />
+										) : (
+											<Center h="157">
+												<Spinner />
+											</Center>
+										)}
+									</motion.div>
+								</Stack>
+							</AnimateSharedLayout>
+						)}
+					</MotionConfig>
+				</Stack>
 			</Flex>
+			{error && (
+				<Alert
+					status="error"
+					variant="left-accent"
+					position="absolute"
+					bottom="0"
+				>
+					<AlertIcon />
+					<AlertTitle>
+						{error.isdelay
+							? t('Train delayed')
+							: t('Oops! Something went wrong')}
+					</AlertTitle>
+				</Alert>
+			)}
 		</motion.div>
 	);
 };
