@@ -81,6 +81,15 @@ const Option = (props: any) => {
 	);
 };
 
+const NoOptionsMessage = (props: any) => {
+	const { t } = useTranslation();
+	return (
+		<components.NoOptionsMessage {...props}>
+			<span>{t('No options')}</span>
+		</components.NoOptionsMessage>
+	);
+};
+
 export const Selection = () => {
 	const history = useHistory();
 	const linesOpt = useLinesOpt();
@@ -165,7 +174,7 @@ export const Selection = () => {
 										isSearchable={false}
 										placeholder={t('Select line...')}
 										onChange={(e) => onSelectedLineChange(e)}
-										components={{ Option }}
+										components={{ Option, NoOptionsMessage }}
 										styles={{ ...lineColor, ...customWidth }}
 										theme={
 											colorMode === 'dark'
@@ -186,6 +195,7 @@ export const Selection = () => {
 										value={selectedStation}
 										placeholder={t('Select station...')}
 										onChange={(e) => onSelectedStationChange(e)}
+										components={{ NoOptionsMessage }}
 										theme={
 											colorMode === 'dark'
 												? (theme) => ({

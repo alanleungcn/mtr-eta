@@ -3,6 +3,7 @@
 		"translation": {
 			"Select line...": "Select line...",
 			"Select station...": "Select station...",
+			"No options": "Please select line first",
 			"Reset": "Reset",
 			"ETA": "ETA",
 			"Station map": "Station map",
@@ -142,6 +143,7 @@
 		"translation": {
 			"Select line...": "選擇路線...",
 			"Select station...": "選擇車站...",
+			"No options": "請先選擇線路",
 			"Reset": "重設",
 			"ETA": "預計時間",
 			"Station map": "車站圖",
