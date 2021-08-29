@@ -1,6 +1,6 @@
+import { i18n } from 'i18next';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { i18n } from 'i18next';
 import { stations } from '../assets/stations';
 
 interface Option {
@@ -34,7 +34,6 @@ export const useSelected = (): [
 			? setStation(station)
 			: setStation(null);
 		setLoading(false);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	useEffect(() => {
 		localStorage.setItem('selectedLine', selectedLine?.value ?? '');

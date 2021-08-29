@@ -149,7 +149,7 @@ export const Selection = () => {
 				<MotionConfig
 					transition={{
 						type: 'spring',
-						duration: 0.25,
+						duration: 0.5,
 					}}
 				>
 					<AnimateSharedLayout>
@@ -223,14 +223,22 @@ export const Selection = () => {
 									</HStack>
 								</motion.div>
 								{selectedLine && (
-									<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+									<motion.div
+										layout="position"
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+									>
 										<Button variant="outline" onClick={onReset}>
 											{t('Reset')}
 										</Button>
 									</motion.div>
 								)}
 								{selectedLine && selectedStation && (
-									<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+									<motion.div
+										layout="position"
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+									>
 										<Button
 											variant="outline"
 											onClick={viewEta}
@@ -242,7 +250,11 @@ export const Selection = () => {
 								)}
 							</HStack>
 							{selectedStation && (
-								<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+								<motion.div
+									layout="position"
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+								>
 									<Footer code={selectedStation.value.toLowerCase()} />
 								</motion.div>
 							)}

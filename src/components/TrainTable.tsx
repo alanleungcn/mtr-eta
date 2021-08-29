@@ -12,34 +12,33 @@ import {
 import { Train } from '../views/Eta';
 import { useTranslation } from 'react-i18next';
 
-export const TimeTable = ({ trainList }: { trainList: Train[] }) => {
+export const TrainTable = ({ trainList }: { trainList: Train[] }) => {
 	const { t } = useTranslation();
 	return trainList.length > 0 ? (
 		<Table size="sm">
 			<Thead>
 				<Tr>
-					<Th w="40%">{t('Destination')}</Th>
-					<Th textAlign="center">{t('Platform')}</Th>
-					<Th isNumeric w="40%">
+					<Th w="35%">{t('Destination')}</Th>
+					<Th textAlign="center" w="30%">
+						{t('Platform')}
+					</Th>
+					<Th isNumeric w="35%">
 						{t('Time')}
 					</Th>
 				</Tr>
 			</Thead>
 			<Tbody>
-				{trainList &&
-					trainList.map((train) => (
-						<Tr key={train.seq}>
-							<Td w="40%" fontSize="15">
-								{t(train.dest)}
-							</Td>
-							<Td textAlign="center" fontSize="15">
-								{train.plat}
-							</Td>
-							<Td isNumeric w="40%" fontSize="15">
-								{train.time}
-							</Td>
-						</Tr>
-					))}
+				{trainList.map((train) => (
+					<Tr key={train.seq}>
+						<Td w="35%">{t(train.dest)}</Td>
+						<Td textAlign="center" w="30%">
+							{train.plat}
+						</Td>
+						<Td isNumeric w="35%">
+							{train.time}
+						</Td>
+					</Tr>
+				))}
 			</Tbody>
 		</Table>
 	) : (
