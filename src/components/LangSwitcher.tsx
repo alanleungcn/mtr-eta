@@ -4,21 +4,21 @@ import React from 'react';
 import { FaLanguage } from 'react-icons/fa';
 
 export const LangSwitcher = ({
-	onLangChange,
+  onLangChange,
 }: {
-	onLangChange: () => void;
+  onLangChange: () => void;
 }) => {
-	const toggleLang = () => {
-		i18next
-			.changeLanguage(i18next.language === 'en' ? 'zh' : 'en')
-			.then(() => onLangChange());
-	};
-	return (
-		<IconButton
-			variant="outline"
-			onClick={toggleLang}
-			icon={<FaLanguage />}
-			aria-label="change language"
-		/>
-	);
+  const toggleLang = () => {
+    i18next
+      .changeLanguage(i18next.language === 'en' ? 'zh' : 'en')
+      .then(() => onLangChange());
+  };
+  return (
+    <IconButton
+      variant="outline"
+      onClick={toggleLang}
+      icon={<FaLanguage />}
+      aria-label="change language"
+    />
+  );
 };

@@ -8,22 +8,22 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { ColorModeScript, extendTheme, ThemeConfig } from '@chakra-ui/react';
 
 const config: ThemeConfig = {
-	initialColorMode: 'dark',
-	useSystemColorMode: false,
+  initialColorMode: 'dark',
+  useSystemColorMode: false,
 };
 
 const theme = extendTheme({ config });
 
 ReactDOM.render(
-	<React.StrictMode>
-		<ChakraProvider theme={theme}>
-			<ColorModeScript initialColorMode={theme.config.initialColorMode} />
-			<HelmetProvider>
-				<Router>
-					<App />
-				</Router>
-			</HelmetProvider>
-		</ChakraProvider>
-	</React.StrictMode>,
-	document.getElementById('root')
+  <React.StrictMode>
+    <ChakraProvider theme={theme}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <HelmetProvider>
+        <Router>
+          <App />
+        </Router>
+      </HelmetProvider>
+    </ChakraProvider>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
