@@ -22,7 +22,6 @@ export const UpDown = ({ up, down, line, station }: UpDownProps) => {
         transition={{
           type: 'spring',
           duration: 0.5,
-          // ease: 'easeInOut',
         }}
       >
         <AnimateSharedLayout>

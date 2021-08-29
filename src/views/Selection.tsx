@@ -104,6 +104,7 @@ export const Selection = () => {
   ] = useSelected();
   const stationsOpt = useStationsOpt(selectedLine?.value);
   const onSelectedLineChange = (e: IOption | null) => {
+    if (selectedLine?.value === e?.value) return;
     setLine(e?.value);
     setStation(null);
   };
@@ -215,8 +216,8 @@ export const Selection = () => {
                   <HStack spacing="25">
                     <LangSwitcher
                       onLangChange={() => {
-                        setLine(selectedLine?.value ?? null);
-                        setStation(selectedStation?.value ?? null);
+                        setLine(selectedLine?.value);
+                        setStation(selectedStation?.value);
                       }}
                     />
                     <ColorModeSwitcher />

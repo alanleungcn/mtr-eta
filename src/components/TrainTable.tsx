@@ -42,7 +42,7 @@ export const TrainTable = ({ trainList }: { trainList: Train[] }) => {
       </Tbody>
     </Table>
   ) : (
-    <Center>
+    <Center h={24.5 + 33 * 4}>
       <Heading size="md" fontStyle="italic">
         {t('Not available')}
       </Heading>

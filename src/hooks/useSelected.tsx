@@ -1,5 +1,5 @@
 import { i18n } from 'i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { stations } from '../assets/stations';
 
@@ -26,6 +26,20 @@ export const useSelected = (): [
   const [selectedLine, setSelectedLine] = useState<Option | null>(null);
   const [selectedStation, setSelectedStation] = useState<Option | null>(null);
   const [loading, setLoading] = useState(true);
+  const setLine = useCallback(
+    (line: string | null | undefined): void => {
+      setSelectedLine(line ? { value: line, label: t(line) } : null);
+    },
+    [t]
+  );
+  const setStation = useCallback(
+    (station: string | null | undefined): void => {
+      setSelectedStation(
+        station ? { value: station, label: t(station) } : null
+      );
+    },
+    [t]
+  );
   useEffect(() => {
     const line = getLocalStorage('selectedLine', i18n);
     const station = getLocalStorage('selectedStation', i18n);
@@ -34,18 +48,12 @@ export const useSelected = (): [
       ? setStation(station)
       : setStation(null);
     setLoading(false);
-  }, []);
+  }, [i18n, setLine, setStation]);
   useEffect(() => {
     localStorage.setItem('selectedLine', selectedLine?.value ?? '');
   }, [selectedLine]);
   useEffect(() => {
     localStorage.setItem('selectedStation', selectedStation?.value ?? '');
   }, [selectedStation]);
-  const setLine = (line: string | null | undefined): void => {
-    setSelectedLine(line ? { value: line, label: t(line) } : null);
-  };
-  const setStation = (station: string | null | undefined): void => {
-    setSelectedStation(station ? { value: station, label: t(station) } : null);
-  };
   return [selectedLine, selectedStation, setLine, setStation, loading];
 };
