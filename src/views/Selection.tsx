@@ -116,9 +116,7 @@ export const Selection = () => {
     setStation(null);
   };
   const viewEta = () => {
-    history.push(`/eta/${selectedLine?.value}/${selectedStation?.value}`, {
-      prev: '/',
-    });
+    history.push(`/eta/${selectedLine?.value}/${selectedStation?.value}`);
   };
   const theme = useTheme();
   const selectColor = {
@@ -139,9 +137,9 @@ export const Selection = () => {
         duration: 0.25,
       }}
       style={{
+        maxWidth: 500,
         width: '100%',
         height: '100%',
-        maxWidth: 500,
         marginLeft: 'auto',
         marginRight: 'auto',
       }}

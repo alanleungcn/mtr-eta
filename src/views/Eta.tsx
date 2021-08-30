@@ -12,7 +12,7 @@ import {
 import { useHistory, useParams } from 'react-router-dom';
 import { lines } from '../assets/lines';
 import { useTrain } from '../hooks/useTrain';
-import { FaArrowLeft } from 'react-icons/fa';
+import { IoChevronBack } from 'react-icons/all';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -38,10 +38,10 @@ export const Eta = () => {
       transition={{ type: 'spring', duration: 0.25 }}
       style={{
         maxWidth: 500,
+        width: '100%',
+        height: '100%',
         marginLeft: 'auto',
         marginRight: 'auto',
-        width: '100vw',
-        height: '100%',
       }}
     >
       <Helmet>
@@ -50,10 +50,11 @@ export const Eta = () => {
       <Flex h="100%" direction="column">
         <HStack mt="5" ml="2.5" spacing="2.5">
           <IconButton
+            fontSize="20"
             variant="ghost"
             aria-label="back"
-            icon={<FaArrowLeft />}
-            onClick={() => history.push('/', { prev: '/eta' })}
+            icon={<IoChevronBack />}
+            onClick={() => history.push('/')}
           />
           <Tag size="lg" color="white" backgroundColor={lines[line].color}>
             {`${t(line)} / ${t(station)}`}

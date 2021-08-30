@@ -1,7 +1,7 @@
-import { IconButton } from '@chakra-ui/react';
-import i18next from 'i18next';
 import React from 'react';
-import { FaLanguage } from 'react-icons/fa';
+import i18next from 'i18next';
+import { IconButton } from '@chakra-ui/react';
+import { IoLanguage } from 'react-icons/all';
 
 export const LangSwitcher = ({
   onLangChange,
@@ -15,9 +15,10 @@ export const LangSwitcher = ({
   };
   return (
     <IconButton
+      fontSize="20"
       variant="outline"
       onClick={toggleLang}
-      icon={<FaLanguage />}
+      icon={<IoLanguage />}
       aria-label="change language"
     />
   );
