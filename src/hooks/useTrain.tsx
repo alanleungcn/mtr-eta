@@ -1,26 +1,17 @@
 import axios from 'axios';
 import * as React from 'react';
 import { useEtaTime } from './useEtaTime';
-
-export interface Train {
-  seq: string;
-  dest: string;
-  plat: string;
-  time: string;
-}
-
-interface Error {
-  isdelay: boolean;
-  message: string;
-}
+import { TrainList, Error } from '../dataStructure';
 
 export const useTrain = (
   line: string,
   sta: string
-): [Train[] | undefined, Train[] | undefined, Error | undefined] => {
+): [TrainList | undefined, TrainList | undefined, Error | undefined] => {
   const [error, setError] = React.useState<Error | undefined>(undefined);
-  const [rawUp, setRawUp] = React.useState<Train[] | undefined>(undefined);
-  const [rawDown, setRawDown] = React.useState<Train[] | undefined>(undefined);
+  const [rawUp, setRawUp] = React.useState<TrainList | undefined>(undefined);
+  const [rawDown, setRawDown] = React.useState<TrainList | undefined>(
+    undefined
+  );
   const [loading, setLoading] = React.useState<boolean>(true);
   const [up, down] = useEtaTime(rawUp, rawDown, loading);
   React.useEffect(() => {

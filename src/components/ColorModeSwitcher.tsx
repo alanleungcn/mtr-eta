@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { IoSunny, IoMoon } from 'react-icons/io5';
 import {
   useColorMode,
   useColorModeValue,
   IconButton,
   IconButtonProps,
 } from '@chakra-ui/react';
-import { IoSunny, IoMoon } from 'react-icons/all';
 
 type ColorModeSwitcherProps = Omit<IconButtonProps, 'aria-label'>;
 

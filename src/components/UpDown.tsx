@@ -1,20 +1,20 @@
 import * as React from 'react';
-import { Tag, Spinner, Stack, Center } from '@chakra-ui/react';
-import { TrainTable } from '../components/TrainTable';
 import { lines } from '../assets/lines';
-import { AnimateSharedLayout, motion, MotionConfig } from 'framer-motion';
+import { TrainList } from '../dataStructure';
 import { stations } from '../assets/stations';
 import { useTranslation } from 'react-i18next';
-import { Train } from '../hooks/useTrain';
+import { TrainTable } from '../components/TrainTable';
+import { Tag, Spinner, Stack, Center } from '@chakra-ui/react';
+import { AnimateSharedLayout, motion, MotionConfig } from 'framer-motion';
 
-interface UpDownProps {
-  up: Train[] | undefined;
-  down: Train[] | undefined;
+interface Props {
+  up: TrainList | undefined;
+  down: TrainList | undefined;
   line: string;
   station: string;
 }
 
-export const UpDown = ({ up, down, line, station }: UpDownProps) => {
+export const UpDown = ({ up, down, line, station }: Props) => {
   const { t } = useTranslation();
   return (
     <Stack mx="2.5" spacing="10">
@@ -34,7 +34,7 @@ export const UpDown = ({ up, down, line, station }: UpDownProps) => {
               </motion.div>
               <motion.div layout="position">
                 {up ? (
-                  <TrainTable trainList={up} />
+                  <TrainTable trainList={up} noTrain={up.length === 0} />
                 ) : (
                   <Center h={24.5 + 33 * 4}>
                     <Spinner />
@@ -52,7 +52,7 @@ export const UpDown = ({ up, down, line, station }: UpDownProps) => {
               </motion.div>
               <motion.div layout="position">
                 {down ? (
-                  <TrainTable trainList={down} />
+                  <TrainTable trainList={down} noTrain={down.length === 0} />
                 ) : (
                   <Center h={24.5 + 33 * 4}>
                     <Spinner />

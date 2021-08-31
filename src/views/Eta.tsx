@@ -1,4 +1,12 @@
 import * as React from 'react';
+import { motion } from 'framer-motion';
+import { lines } from '../assets/lines';
+import { Helmet } from 'react-helmet-async';
+import { useTrain } from '../hooks/useTrain';
+import { UpDown } from '../components/UpDown';
+import { useTranslation } from 'react-i18next';
+import { IoChevronBack } from 'react-icons/all';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   Tag,
   Alert,
@@ -9,21 +17,6 @@ import {
   Flex,
   Spacer,
 } from '@chakra-ui/react';
-import { useHistory, useParams } from 'react-router-dom';
-import { lines } from '../assets/lines';
-import { useTrain } from '../hooks/useTrain';
-import { IoChevronBack } from 'react-icons/all';
-import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { Helmet } from 'react-helmet-async';
-import { UpDown } from '../components/UpDown';
-
-export interface Train {
-  dest: string;
-  plat: string;
-  seq: string;
-  time: string;
-}
 
 export const Eta = () => {
   const history = useHistory();

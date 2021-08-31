@@ -1,12 +1,8 @@
 import { i18n } from 'i18next';
-import { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Option } from '../dataStructure';
 import { stations } from '../assets/stations';
-
-interface Option {
-  value: string;
-  label: string;
-}
+import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useCallback } from 'react';
 
 const getLocalStorage = (key: string, i18next: i18n): string | null => {
   const item = localStorage.getItem(key);

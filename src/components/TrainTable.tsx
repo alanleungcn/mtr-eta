@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { TrainList } from '../dataStructure';
+import { useTranslation } from 'react-i18next';
 import {
   Table,
   Thead,
@@ -9,12 +11,21 @@ import {
   Heading,
   Center,
 } from '@chakra-ui/react';
-import { Train } from '../views/Eta';
-import { useTranslation } from 'react-i18next';
 
-export const TrainTable = ({ trainList }: { trainList: Train[] }) => {
+interface Props {
+  trainList: TrainList;
+  noTrain: boolean;
+}
+
+export const TrainTable = ({ trainList, noTrain }: Props) => {
   const { t } = useTranslation();
-  return trainList.length > 0 ? (
+  return noTrain ? (
+    <Center h={24.5 + 33 * 4}>
+      <Heading size="md" fontStyle="italic">
+        {t('Not available')}
+      </Heading>
+    </Center>
+  ) : (
     <Table size="sm">
       <Thead>
         <Tr>
@@ -41,11 +52,5 @@ export const TrainTable = ({ trainList }: { trainList: Train[] }) => {
         ))}
       </Tbody>
     </Table>
-  ) : (
-    <Center h={24.5 + 33 * 4}>
-      <Heading size="md" fontStyle="italic">
-        {t('Not available')}
-      </Heading>
-    </Center>
   );
 };

@@ -1,11 +1,4 @@
-interface Lines {
-  [name: string]: {
-    up: string;
-    down: string;
-    color: string;
-    eta: boolean;
-  };
-}
+import { Lines } from '../dataStructure';
 
 export const lines: Lines = {
   AEL: {

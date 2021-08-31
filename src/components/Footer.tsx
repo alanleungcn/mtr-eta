@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { HStack, Link } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
+import { HStack, Link } from '@chakra-ui/react';
 
-export const Footer = ({ code }: { code: string }) => {
+interface Props {
+  code: string;
+}
+
+export const Footer = ({ code }: Props) => {
   const { t } = useTranslation();
   return (
     <HStack spacing="25px">

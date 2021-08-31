@@ -1,6 +1,4 @@
-interface Stations {
-  [name: string]: string[];
-}
+import { Stations } from '../dataStructure';
 
 export const stations: Stations = {
   AEL: ['HOK', 'KOW', 'TSY', 'AIR', 'AWE'],

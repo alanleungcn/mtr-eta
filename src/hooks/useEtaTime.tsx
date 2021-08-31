@@ -1,25 +1,18 @@
-import { useCallback, useState } from 'react';
-import { useEffect } from 'react';
+import { TrainList } from '../dataStructure';
 import { useTranslation } from 'react-i18next';
-
-interface Train {
-  dest: string;
-  plat: string;
-  seq: string;
-  time: string;
-}
+import { useEffect, useCallback, useState } from 'react';
 
 export const useEtaTime = (
-  up: Train[] | undefined,
-  down: Train[] | undefined,
+  up: TrainList | undefined,
+  down: TrainList | undefined,
   loading: boolean
-): [Train[] | undefined, Train[] | undefined] => {
+): [TrainList | undefined, TrainList | undefined] => {
   const { t } = useTranslation();
-  const [upList, setUpList] = useState<Train[]>();
-  const [downList, setDownList] = useState<Train[]>();
+  const [upList, setUpList] = useState<TrainList>();
+  const [downList, setDownList] = useState<TrainList>();
   const setTime = useCallback(
-    (train: Train[]): Train[] => {
-      const tmp: Train[] = [];
+    (train: TrainList): TrainList => {
+      const tmp: TrainList = [];
       for (let i = 0; i < train.length; i++) {
         const min =
           (+new Date(train[i].time.replace(/\s/, 'T')) - +new Date()) / 60000;

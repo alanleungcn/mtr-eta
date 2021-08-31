@@ -1,15 +1,11 @@
-import { useTranslation } from 'react-i18next';
 import { stations } from '../assets/stations';
+import { OptionList } from '../dataStructure';
+import { useTranslation } from 'react-i18next';
 
-interface Option {
-  value: string;
-  label: string;
-}
-
-export const useStationsOpt = (line: string | undefined): Option[] => {
+export const useStationsOpt = (line: string | undefined): OptionList => {
   const { t } = useTranslation();
   if (!line) return [];
-  const options: Option[] = [];
+  const options: OptionList = [];
   stations[line].forEach((e) => {
     options.push({ value: e, label: t(e) });
   });
